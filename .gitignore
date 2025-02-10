@@ -111,3 +111,7 @@ upload/
 .vscode/
 .idea/
 .DS_Store
+
+
+# example file
+week4/server.example.js
