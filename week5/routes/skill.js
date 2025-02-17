@@ -4,23 +4,17 @@ const router = express.Router();
 const { dataSource } = require("../db/data-source");
 
 const logger = require("../utils/logger")("Skill");
+const { isUndefined, isNotValidString } = require("../utils/validators");
 
-function isUndefined(value) {
-  return value === undefined;
-}
-
-function isNotValidSting(value) {
-  return typeof value !== "string" || value.trim().length === 0 || value === "";
-}
-
-router.get("/", async (req, res, next) => {
+router.get("/skill", async (req, res, next) => {
   try {
-    const skill = await dataSource.getRepository("Skill").find({
+    const skills = await dataSource.getRepository("Skill").find({
       select: ["id", "name"],
     });
-    res.status(200).json({
+
+    res.json({
       status: "success",
-      data: skill,
+      data: skills,
     });
   } catch (error) {
     logger.error(error);
@@ -28,34 +22,35 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/skill", async (req, res, next) => {
+  const { name } = req.body;
   try {
-    const { name } = req.body;
-    if (isUndefined(name) || isNotValidSting(name)) {
-      res.status(400).json({
+    if (isUndefined(name) || isNotValidString(name)) {
+      return res.status(400).json({
         status: "failed",
         message: "欄位未填寫正確",
       });
-      return;
     }
-    const skillRepo = await dataSource.getRepository("Skill");
-    const existSkill = await skillRepo.find({
+    const skills = await dataSource.getRepository("Skill");
+    const existSkills = await skills.find({
       where: {
         name,
       },
     });
-    if (existSkill.length > 0) {
-      res.status(409).json({
+    if (existSkills.length > 0) {
+      return res.status(409).json({
         status: "failed",
         message: "資料重複",
       });
-      return;
     }
-    const newSkill = await skillRepo.create({
+
+    const newSkill = await skills.create({
       name,
     });
-    const result = await skillRepo.save(newSkill);
-    res.status(200).json({
+
+    const result = await skills.save(newSkill);
+
+    res.json({
       status: "success",
       data: result,
     });
@@ -65,30 +60,31 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.delete("/:skillId", async (req, res, next) => {
+router.delete("/skill/:skillId", async (req, res, next) => {
   try {
-    const skillId = req.url.split("/").pop();
-    if (isUndefined(skillId) || isNotValidSting(skillId)) {
-      res.status(400).json({
+    const { skillId } = req.params;
+    if (isUndefined(skillId) || isNotValidString(skillId)) {
+      return res.status(400).json({
         status: "failed",
         message: "ID錯誤",
       });
-      return;
     }
-    const result = await dataSource.getRepository("Skill").delete(skillId);
+
+    const skills = await dataSource.getRepository("Skill");
+
+    const result = await skills.delete(skillId);
+
     if (result.affected === 0) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "failed",
         message: "ID錯誤",
       });
-      return;
     }
-    res.status(200).json({
+
+    return res.json({
       status: "success",
-      data: result,
     });
-    res.end();
-  } catch (error) {
+  } catch (err) {
     logger.error(error);
     next(error);
   }

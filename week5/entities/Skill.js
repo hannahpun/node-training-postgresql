@@ -19,7 +19,6 @@ module.exports = new EntitySchema({
     createdAt: {
       type: "timestamp",
       createDate: true,
-      name: "created_at",
       nullable: false,
     },
   },
