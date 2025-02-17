@@ -14,7 +14,7 @@ module.exports = new EntitySchema({
       nullable: false,
       unique: true,
     },
-    experence_years: {
+    experience_years: {
       type: "integer",
       nullable: true,
     },
@@ -27,12 +27,12 @@ module.exports = new EntitySchema({
       length: 2048,
       nullable: true,
     },
-    createdAt: {
+    created_at: {
       type: "timestamp",
       createDate: true,
       nullable: false,
     },
-    updateAt: {
+    updated_at: {
       type: "timestamp",
       createDate: true,
       nullable: false,

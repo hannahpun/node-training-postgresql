@@ -9,6 +9,7 @@ const creditPackageRouter = require("./routes/creditPackage");
 const skill = require("./routes/skill");
 const user = require("./routes/user");
 const admin = require("./routes/admin");
+const coaches = require("./routes/coaches");
 
 const app = express();
 app.use(bodyParser.json());
@@ -32,6 +33,7 @@ app.use("/api/credit-package", creditPackageRouter);
 app.use("/api/coaches", skill);
 app.use("/api/users", user);
 app.use("/api/admin", admin);
+app.use("/api/coaches", coaches);
 app.get("/error", (req, res, next) => {
   next(new Error("新增一個執行錯誤!"));
 });
