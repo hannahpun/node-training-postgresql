@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const appError = require("./appError");
+const appError = require("./middleware/appError");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
