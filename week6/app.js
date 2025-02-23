@@ -50,10 +50,10 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  req.log.error(err);
-  res.status(500).json({
+  // req.log.error(err);
+  res.status(err.status || 500).json({
     status: "error",
-    message: "伺服器錯誤",
+    message: err.message,
   });
 });
 

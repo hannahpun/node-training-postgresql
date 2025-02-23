@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { dataSource } = require("../db/data-source");
 const logger = require("../utils/logger")("Coaches");
+
 const { isNotValidString } = require("../utils/validators");
 
 router.get("/", async (req, res, next) => {
